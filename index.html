@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Kids Story & Activity Generator | Fun Creative Writing for Children</title>
+    <meta name="description" content="Generate fun and creative short stories, playtime scenarios, and educational activities for kids. Spark your child's imagination with our free AI-powered story and activity generator.">
+    <meta name="keywords" content="kids stories, children's stories, creative writing for kids, kids activities, playtime ideas, educational games, story generator, AI for kids, parenting tool">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-indigo-600 dark:text-indigo-400">Kids Story & Activity Generator</h1>
+            <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">Spark your child's imagination with endless creative ideas!</p>
+        </header>
+
+        <main class="max-w-2xl mx-auto">
+            <div id="story-form-container" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-lg">
+                <form id="story-form">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="character" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Main Character</label>
+                            <input type="text" id="character" name="character" class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="e.g., A friendly dinosaur, a magical unicorn" required>
+                        </div>
+                        <div>
+                            <label for="setting" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Setting or Activity</label>
+                            <input type="text" id="setting" name="setting" class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="e.g., A backyard treasure hunt, a trip to the moon" required>
+                        </div>
+                        <div>
+                            <label for="genre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Type of Story or Idea</label>
+                            <input type="text" id="genre" name="genre" class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="e.g., Funny adventure, a learning game, a bedtime story" required>
+                        </div>
+                    </div>
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                        <button type="submit" id="generate-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 flex items-center justify-center">
+                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z" />
+                            </svg>
+                            <span id="generate-btn-text">Generate Idea</span>
+                        </button>
+                        <button type="button" id="random-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-teal-500 focus:ring-opacity-50 flex items-center justify-center">
+                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>I'm Feeling Lucky!</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="loading-indicator" class="text-center my-8 hidden">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-500"></div>
+                <p class="mt-4 text-gray-600 dark:text-gray-400">Your creative idea is on its way...</p>
+            </div>
+
+            <div id="story-output" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-lg mt-8 hidden fade-in">
+                <h2 class="text-2xl font-bold mb-4 text-indigo-600 dark:text-indigo-400">Your Creative Idea</h2>
+                <div id="story-content" class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap"></div>
+                <div class="mt-6 flex justify-end space-x-4">
+                     <button id="copy-btn" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded-lg transition flex items-center">
+                        <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Copy
+                    </button>
+                    <button id="start-over-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                        Start Over
+                    </button>
+                </div>
+                 <div id="copy-notification" class="text-sm text-green-500 mt-2 text-right hidden">Idea copied to clipboard!</div>
+            </div>
+            
+            <!-- New SEO Content Section -->
+            <div class="mt-12 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-lg text-gray-700 dark:text-gray-300">
+                <h3 class="text-2xl font-bold mb-4 text-indigo-600 dark:text-indigo-400">More Than Just Stories!</h3>
+                <p class="mb-4">This tool is a powerful creative partner for parents, teachers, and kids! While it's great for writing stories, you can also use it to brainstorm all sorts of fun and educational activities. Stuck for a rainy day idea? Need a creative prompt for a school project? Want to invent a new game? Just type your ideas into the fields above!</p>
+                <h4 class="text-lg font-semibold mb-2">Example Ideas to Try:</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>Create rules for a new board game.</li>
+                    <li>Generate a fun science experiment idea.</li>
+                    <li>Write a short play for the family to perform.</li>
+                    <li>Get ideas for a creative drawing or painting.</li>
+                    <li>Make up a silly song or poem.</li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer class="text-center mt-12 text-gray-500 dark:text-gray-400 text-sm">
+            <p>Powered by Gemini. A fun tool for kids and families.</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const storyForm = document.getElementById('story-form');
+        const generateBtn = document.getElementById('generate-btn');
+        const randomBtn = document.getElementById('random-btn');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const storyOutput = document.getElementById('story-output');
+        const storyContent = document.getElementById('story-content');
+        const copyBtn = document.getElementById('copy-btn');
+        const startOverBtn = document.getElementById('start-over-btn');
+        const storyFormContainer = document.getElementById('story-form-container');
+        const copyNotification = document.getElementById('copy-notification');
+        const characterInput = document.getElementById('character');
+        const settingInput = document.getElementById('setting');
+        const genreInput = document.getElementById('genre');
+
+        // --- Random Idea Pools ---
+        const randomCharacters = ['A brave little astronaut', 'A talking squirrel', 'A superhero who loves to bake', 'A friendly robot', 'A mermaid who can\'t swim', 'A clumsy dragon', 'A detective penguin'];
+        const randomSettings = ['a magical candy forest', 'a secret underwater city', 'building the tallest pillow fort ever', 'a race to the top of a volcano', 'solving the mystery of the missing cookies', 'a talent show on the moon'];
+        const randomGenres = ['a silly adventure', 'a heartwarming friendship story', 'a funny mystery', 'a lesson about sharing', 'a magical quest', 'a futuristic tale'];
+
+        // --- Event Listeners ---
+        storyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const character = characterInput.value;
+            const setting = settingInput.value;
+            const genre = genreInput.value;
+
+            showLoadingState(true);
+
+            const prompt = `Write a short, kid-friendly creative piece (around 150-250 words) based on the following idea: a ${genre} about a ${character} in a setting of/doing an activity of "${setting}". Make it creative, engaging, and appropriate for children.`;
+            
+            try {
+                const text = await generateText(prompt);
+                storyContent.textContent = text.trim();
+                storyOutput.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error generating story:', error);
+                storyContent.textContent = 'Sorry, something went wrong while generating your idea. Please try again.';
+                storyOutput.classList.remove('hidden');
+            } finally {
+                showLoadingState(false);
+            }
+        });
+
+        randomBtn.addEventListener('click', () => {
+            characterInput.value = randomCharacters[Math.floor(Math.random() * randomCharacters.length)];
+            settingInput.value = randomSettings[Math.floor(Math.random() * randomSettings.length)];
+            genreInput.value = randomGenres[Math.floor(Math.random() * randomGenres.length)];
+            
+            // Automatically trigger the form submission
+            generateBtn.click();
+        });
+
+        copyBtn.addEventListener('click', () => {
+            const textToCopy = storyContent.textContent;
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                copyNotification.classList.remove('hidden');
+                setTimeout(() => {
+                    copyNotification.classList.add('hidden');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+            document.body.removeChild(textArea);
+        });
+
+        startOverBtn.addEventListener('click', () => {
+            storyOutput.classList.add('hidden');
+            storyFormContainer.classList.remove('hidden');
+            storyForm.reset();
+        });
+
+        // --- Helper Functions ---
+        function showLoadingState(isLoading) {
+            if (isLoading) {
+                storyFormContainer.classList.add('hidden');
+                storyOutput.classList.add('hidden');
+                loadingIndicator.classList.remove('hidden');
+                generateBtn.disabled = true;
+                randomBtn.disabled = true;
+            } else {
+                loadingIndicator.classList.add('hidden');
+                generateBtn.disabled = false;
+                randomBtn.disabled = false;
+            }
+        }
+        
+        async function generateText(prompt) {
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // API key will be provided by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            let response;
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) break;
+                } catch (error) {
+                    // This will catch network errors
+                }
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+
+            if (!response || !response.ok) {
+                throw new Error('API request failed after multiple retries.');
+            }
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                return result.candidates[0].content.parts[0].text;
+            } else {
+                console.error("Unexpected API response structure:", result);
+                throw new Error("Failed to parse the story from the API response.");
+            }
+        }
+    </script>
+</body>
+</html>
