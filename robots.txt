@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ananjaygoel.github.io/story/sitemap.xml
